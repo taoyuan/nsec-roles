@@ -39,9 +39,8 @@ module.exports = function (Role) {
 			.then(() => this.save());
 	};
 
-
 	/**
-	 * Set parents to role's inherits
+	 ro
 	 *
 	 * @param parents
 	 * @return {Promise.<Role>}
