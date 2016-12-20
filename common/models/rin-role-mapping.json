@@ -1,0 +1,32 @@
+{
+  "name": "RinRoleMapping",
+  "properties": {
+	"id": {
+	  "type": "string",
+	  "id": true,
+	  "generated": false
+	},
+    "userId": {
+      "type": "string",
+	  "required": true,
+      "index": true
+    },
+    "roleId": {
+      "type": "string",
+	  "required": true,
+      "index": true
+    },
+    "scope": {
+      "type": "string",
+	  "required": true,
+      "index": true
+    }
+  },
+  "relations": {
+    "role": {
+      "type": "belongsTo",
+      "model": "RinRole",
+      "foreignKey": "roleId"
+    }
+  }
+}

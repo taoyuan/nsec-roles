@@ -1,0 +1,19 @@
+{
+  "parser": "babel-eslint",
+  "extends": [
+	"xo/esnext"
+  ],
+  "rules": {
+	"no-return-assign": "off",
+	"no-warning-comments": "off",
+	"curly": "off",
+	"no-tabs": "off",
+	"indent": [
+	  2,
+	  "tab"
+	],
+	"import/export": "off",
+	"object-curly-spacing": "off",
+	"arrow-parens": "off"
+  }
+}
