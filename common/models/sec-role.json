@@ -1,5 +1,5 @@
 {
-  "name": "RinRole",
+  "name": "SecRole",
   "properties": {
 	"id": {
 	  "type": "string",
@@ -19,7 +19,7 @@
   "relations": {
 	"inherits": {
 	  "type": "referencesMany",
-	  "model": "RinRole",
+	  "model": "SecRole",
 	  "foreignKey": "parentIds",
 	  "options": {
 		"validate": true,
@@ -28,7 +28,7 @@
 	},
 	"mappings": {
 	  "type": "hasMany",
-	  "model": "RinRoleMapping",
+	  "model": "SecRoleMapping",
 	  "foreignKey": "roleId"
 	}
   }

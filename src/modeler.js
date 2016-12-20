@@ -14,7 +14,7 @@ const DataSource = require('loopback-datasource-juggler').DataSource;
  * @param {Object|String} [opts.dataSource]
  * @param {Object|String} [opts.datasource]
  * @param {Object|String} [opts.ds]
- * @return {{RinRole: Object, RinRoleMapping: Object}}
+ * @return {{SecRole: Object, SecRoleMapping: Object}}
  */
 exports.load = function (opts) {
 	opts = Object.assign({

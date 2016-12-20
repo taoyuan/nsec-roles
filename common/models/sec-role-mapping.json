@@ -1,5 +1,5 @@
 {
-  "name": "RinRoleMapping",
+  "name": "SecRoleMapping",
   "properties": {
 	"id": {
 	  "type": "string",
@@ -25,7 +25,7 @@
   "relations": {
     "role": {
       "type": "belongsTo",
-      "model": "RinRole",
+      "model": "SecRole",
       "foreignKey": "roleId"
     }
   }

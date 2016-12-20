@@ -32,8 +32,8 @@ class Rolein {
 
 		this._scope = opts.scope;
 
-		this.Role = this.models.RinRole;
-		this.RoleMapping = this.models.RinRoleMapping;
+		this.Role = this.models.SecRole;
+		this.RoleMapping = this.models.SecRoleMapping;
 	}
 
 	get scope() {

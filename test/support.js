@@ -23,6 +23,6 @@ exports.teardown = function () {
 	return cleanup(ds);
 };
 
-exports.createRolein = function (opts) {
+exports.createRoles = function (opts) {
 	return new Rolein(Object.assign({ds}, opts));
 };

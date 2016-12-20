@@ -1,17 +1,16 @@
-# [rolein](https://github.com/taoyuan/rolein)
+# [nsec-roles](https://github.com/taoyuan/nsec-roles)
 
-[![NPM version](http://img.shields.io/npm/v/rolein.svg?style=flat-square)](https://www.npmjs.com/package/rolein)
-[![NPM downloads](http://img.shields.io/npm/dm/rolein.svg?style=flat-square)](https://www.npmjs.com/package/rolein)
-[![Build Status](http://img.shields.io/travis/taoyuan/rolein/master.svg?style=flat-square)](https://travis-ci.org/taoyuan/rolein)
-[![Coverage Status](https://img.shields.io/coveralls/taoyuan/rolein.svg?style=flat-square)](https://coveralls.io/taoyuan/rolein)
-[![Dependency Status](http://img.shields.io/david/taoyuan/rolein.svg?style=flat-square)](https://david-dm.org/taoyuan/rolein)
+[![NPM version](http://img.shields.io/npm/v/nsec-roles.svg?style=flat-square)](https://www.npmjs.com/package/nsec-roles)
+[![NPM downloads](http://img.shields.io/npm/dm/nsec-roles.svg?style=flat-square)](https://www.npmjs.com/package/nsec-roles)
+[![Build Status](http://img.shields.io/travis/taoyuan/nsec-roles/master.svg?style=flat-square)](https://travis-ci.org/taoyuan/nsec-roles)
+[![Coverage Status](https://img.shields.io/coveralls/taoyuan/nsec-roles.svg?style=flat-square)](https://coveralls.io/taoyuan/nsec-roles)
 
 > A scoped role library for node.js persisted with loopback juggler
 
 ### How to Install
 
 ```sh
-$ npm install rolein
+$ npm install nsec-roles
 ```
 
 ### Getting Started

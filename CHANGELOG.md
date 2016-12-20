@@ -1,4 +1,4 @@
-## rolein Change Log
+## nsec-roles Change Log
 
 All notable changes to this project will be documented in this file.
 
@@ -10,5 +10,5 @@ All notable changes to this project will be documented in this file.
 
 - ...
 
-[unreleased]: https://github.com/taoyuan/rolein/compare/v1.0.0...HEAD
-[v0.0.1]: https://github.com/taoyuan/rolein/compare/v0.0.0...v1.0.0
+[unreleased]: https://github.com/taoyuan/nsec-roles/compare/v1.0.0...HEAD
+[v0.0.1]: https://github.com/taoyuan/nsec-roles/compare/v0.0.0...v1.0.0

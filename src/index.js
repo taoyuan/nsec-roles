@@ -1,5 +1,5 @@
 /**
- * rolein
+ * nsec-roles
  *
  * Copyright © 2016 Yuan Tao. All rights reserved.
  *
@@ -7,4 +7,4 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-module.exports = require('./rolein');
+module.exports = require('./nsec-roles');

@@ -5,23 +5,23 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const s = require('./support');
 
-describe('rolein', () => {
-	const rin = s.createRolein();
+describe('nsec-roles', () => {
+	const rs = s.createRoles();
 
 	beforeEach(() => s.setup());
 	afterEach(() => s.teardown());
 
 	function addRoles() {
 		return Promise.all([
-			rin.add({scope: null, name: 'member'}),
-			rin.add({scope: 'org:1', name: 'member'}),
-			rin.add({scope: 'team:1', name: 'member'})
+			rs.add({scope: null, name: 'member'}),
+			rs.add({scope: 'org:1', name: 'member'}),
+			rs.add({scope: 'team:1', name: 'member'})
 		]);
 	}
 
 	it('should find roles', () => {
 		return addRoles().then(([role]) => {
-			return rin.find({where: {scope: null}}).then(roles => {
+			return rs.find({where: {scope: null}}).then(roles => {
 				assert.equal(roles.length, 1);
 				assert.deepEqual(roles[0].toObject(), role.toObject());
 			});
@@ -30,52 +30,52 @@ describe('rolein', () => {
 
 	it('should remove role', () => {
 		return addRoles()
-			.then(() => rin.count({name: 'member'}))
+			.then(() => rs.count({name: 'member'}))
 			.then(count => assert.equal(count, 3))
 
-			.then(() => rin.count({scope: null, name: 'member'}))
+			.then(() => rs.count({scope: null, name: 'member'}))
 			.then(count => assert.equal(count, 1))
-			.then(() => rin.count({scope: 'org:1', name: 'member'}))
+			.then(() => rs.count({scope: 'org:1', name: 'member'}))
 			.then(count => assert.equal(count, 1))
-			.then(() => rin.count({scope: 'team:1', name: 'member'}))
+			.then(() => rs.count({scope: 'team:1', name: 'member'}))
 			.then(count => assert.equal(count, 1))
 
-			.then(() => rin.remove({scope: null, name: 'member'}))
-			.then(() => rin.count({scope: null, name: 'member'}))
+			.then(() => rs.remove({scope: null, name: 'member'}))
+			.then(() => rs.count({scope: null, name: 'member'}))
 			.then(count => assert.equal(count, 0))
 
-			.then(() => rin.remove({scope: 'org:1', name: 'member'}))
-			.then(() => rin.count({scope: 'org:1', name: 'member'}))
+			.then(() => rs.remove({scope: 'org:1', name: 'member'}))
+			.then(() => rs.count({scope: 'org:1', name: 'member'}))
 			.then(count => assert.equal(count, 0))
 
-			.then(() => rin.remove({scope: 'team:1', name: 'member'}))
-			.then(() => rin.count({scope: 'team:1', name: 'member'}))
+			.then(() => rs.remove({scope: 'team:1', name: 'member'}))
+			.then(() => rs.count({scope: 'team:1', name: 'member'}))
 			.then(count => assert.equal(count, 0))
 
-			.then(() => rin.count({name: 'member'}))
+			.then(() => rs.count({name: 'member'}))
 			.then(count => assert.equal(count, 0));
 	});
 
 	it('should inherits from parents', () => {
-		const scoped = rin.scoped();
+		const scoped = rs.scoped();
 		return Promise.all([
 			scoped.add('member'),
 			scoped.add('leader'),
 			scoped.add('admin')
 		]).then(([member, leader, admin]) => {
-			return rin.inherit(admin, member)
+			return rs.inherit(admin, member)
 				.then(role => {
 					assert.sameMembers(role.parentIds, [member.id]);
 				})
-				.then(() => rin.inherit(admin, leader))
+				.then(() => rs.inherit(admin, leader))
 				.then(role => {
 					assert.sameMembers(role.parentIds, [member.id, leader.id]);
 				})
-				.then(() => rin.uninherit(admin, member))
+				.then(() => rs.uninherit(admin, member))
 				.then(role => {
 					assert.sameMembers(role.parentIds, [leader.id]);
 				})
-				.then(() => rin.setInherits(admin, [admin, member, leader]))
+				.then(() => rs.setInherits(admin, [admin, member, leader]))
 				.then(role => {
 					assert.sameMembers(role.parentIds, [member.id, leader.id]);
 				});
@@ -83,23 +83,23 @@ describe('rolein', () => {
 	});
 
 	it('should get roles parents', () => {
-		return createInheritedRoles(rin.scoped()).then(([A, B, C, D, ABC, BCD]) => {
-			return rin.getParents([ABC, BCD]).then(parents => {
+		return createInheritedRoles(rs.scoped()).then(([A, B, C, D, ABC, BCD]) => {
+			return rs.getParents([ABC, BCD]).then(parents => {
 				assert.sameDeepMembers(parents.map(p => p.name), ['A', 'B', 'C', 'D']);
 			});
 		});
 	});
 
 	it('should recurse parents ', () => {
-		return createInheritedRoles(rin.scoped()).then(([A, B, C, D, ABC, BCD, ABCD]) => {
-			return rin.recurseParentIds(ABCD).then(parentIds => {
+		return createInheritedRoles(rs.scoped()).then(([A, B, C, D, ABC, BCD, ABCD]) => {
+			return rs.recurseParentIds(ABCD).then(parentIds => {
 				assert.sameDeepMembers(parentIds, [A, B, C, D, ABC, BCD].map(r => r.id));
 			});
 		});
 	});
 
 	it('should assign user roles', () => {
-		const scoped = rin.scoped('123');
+		const scoped = rs.scoped('123');
 		return createInheritedRoles(scoped).then(([A, B, C]) => {
 			return scoped.assign([A, B, C], 'Tom').then(mappings => {
 				assert.lengthOf(mappings, 3);
@@ -113,7 +113,7 @@ describe('rolein', () => {
 	});
 
 	it('should unassign user roles', () => {
-		const scoped = rin.scoped('123');
+		const scoped = rs.scoped('123');
 		return createInheritedRoles(scoped).then(([A, B, C]) => {
 			return scoped.assign([A, B, C], 'Tom').then(() => {
 				return scoped.unassign(A, 'Tom').then(info => {
@@ -130,8 +130,8 @@ describe('rolein', () => {
 	});
 
 	it('should find roles by users', () => {
-		const X = rin.scoped('X');
-		const Y = rin.scoped('Y');
+		const X = rs.scoped('X');
+		const Y = rs.scoped('Y');
 		return Promise.all([
 			createInheritedRoles(X),
 			createInheritedRoles(Y)
@@ -153,8 +153,8 @@ describe('rolein', () => {
 	});
 
 	it('should find roles recursively by users', () => {
-		const X = rin.scoped('X');
-		const Y = rin.scoped('Y');
+		const X = rs.scoped('X');
+		const Y = rs.scoped('Y');
 		return Promise.all([
 			createInheritedRoles(X),
 			createInheritedRoles(Y)
@@ -177,8 +177,8 @@ describe('rolein', () => {
 	});
 
 	it('should find users by roles', () => {
-		const X = rin.scoped('X');
-		const Y = rin.scoped('Y');
+		const X = rs.scoped('X');
+		const Y = rs.scoped('Y');
 		return Promise.all([
 			createInheritedRoles(X),
 			createInheritedRoles(Y)
@@ -200,8 +200,8 @@ describe('rolein', () => {
 	});
 
 	it('should has roles with role id', () => {
-		const X = rin.scoped('X');
-		const Y = rin.scoped('Y');
+		const X = rs.scoped('X');
+		const Y = rs.scoped('Y');
 		return Promise.all([
 			createInheritedRoles(X),
 			createInheritedRoles(Y)
@@ -225,8 +225,8 @@ describe('rolein', () => {
 	});
 
 	it('should has roles with role name', () => {
-		const X = rin.scoped('X');
-		const Y = rin.scoped('Y');
+		const X = rs.scoped('X');
+		const Y = rs.scoped('Y');
 		return Promise.all([
 			createInheritedRoles(X),
 			createInheritedRoles(Y)
@@ -250,22 +250,22 @@ describe('rolein', () => {
 	});
 });
 
-function createInheritedRoles(rolein) {
-	if (!rolein.isScoped) throw new Error('require scoped roles');
+function createInheritedRoles(nsec-roles) {
+	if (!nsec-roles.isScoped) throw new Error('require scoped roles');
 	return Promise.all([
-		rolein.add('A'),
-		rolein.add('B'),
-		rolein.add('C'),
-		rolein.add('D'),
-		rolein.add('ABC'),
-		rolein.add('BCD'),
-		rolein.add('ABCD')
+		nsec-roles.add('A'),
+		nsec-roles.add('B'),
+		nsec-roles.add('C'),
+		nsec-roles.add('D'),
+		nsec-roles.add('ABC'),
+		nsec-roles.add('BCD'),
+		nsec-roles.add('ABCD')
 	]).then(roles => {
 		const [A, B, C, D, ABC, BCD, ABCD] = roles;
 		return Promise.all([
-			rolein.inherit(ABC, [A, B, C]),
-			rolein.inherit(BCD, [B, C, D]),
-			rolein.inherit(ABCD, [ABC, BCD])
+			nsec-roles.inherit(ABC, [A, B, C]),
+			nsec-roles.inherit(BCD, [B, C, D]),
+			nsec-roles.inherit(ABCD, [ABC, BCD])
 		]).thenReturn(roles);
 	});
 }

@@ -1,8 +1,8 @@
 {
-  "name": "rolein",
+  "name": "nsec-roles",
   "version": "0.1.1",
   "description": "A scoped role library for node.js persisted with loopback juggler",
-  "repository": "taoyuan/rolein",
+  "repository": "taoyuan/nsec-roles",
   "author": "Yuan Tao",
   "license": "MIT",
   "keywords": [
@@ -55,7 +55,7 @@
     "lint": "eslint src test tools",
     "test": "npm run lint && nyc mocha test/**/*.test.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
-    "publish:docs": "easystatic deploy docs --repo taoyuan/rolein",
+    "publish:docs": "easystatic deploy docs --repo taoyuan/nsec-roles",
     "start": "easystatic start docs"
   },
   "nyc": {

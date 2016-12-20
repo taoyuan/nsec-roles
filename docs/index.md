@@ -1,6 +1,6 @@
 ---
 id: home
-title: rolein ∙ A scoped role library for nodejs persisted with loopback juggler
+title: nsec-roles ∙ A scoped role library for nodejs persisted with loopback juggler
 ---
 
 # Welcome!
