@@ -15,24 +15,50 @@ module.exports = function (Role) {
 		return Role.resolve(parents, p => p.id !== this.id && p.scope === this.scope).map(p => p.id);
 	};
 
+	/**
+	 * Inherit from parents
+	 *
+	 * @param {Role|String} parents
+	 * @return {Promise.<Role>}
+	 */
 	Role.prototype.inherit = function (parents) {
 		return this.resolveParentIds(parents)
 			.then(parentIds => this.parentIds = _.union(this.parentIds, parentIds))
 			.then(() => this.save());
 	};
 
+	/**
+	 * Uninherit form parents
+	 *
+	 * @param parents
+	 * @return {Promise.<Role>}
+	 */
 	Role.prototype.uninherit = function (parents) {
 		return this.resolveParentIds(parents)
 			.then(parentIds => this.parentIds = _.without(this.parentIds, ...parentIds))
 			.then(() => this.save());
 	};
 
+
+	/**
+	 * Set parents to role's inherits
+	 *
+	 * @param parents
+	 * @return {Promise.<Role>}
+	 */
 	Role.prototype.setInherits = function (parents) {
 		return this.resolveParentIds(parents)
 			.then(parents => this.parentIds = parents)
 			.then(() => this.save());
 	};
 
+	/**
+	 * Resolve roles with filter function or scope
+	 *
+	 * @param {[Object]|[String]|Object|String} roles
+	 * @param {Function|String} [filter]
+	 * @return {Promise.<[Role]>}
+	 */
 	Role.resolve = function (roles, filter) {
 		let scope;
 		if (_.isString(filter)) {

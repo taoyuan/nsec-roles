@@ -11,8 +11,16 @@ const modeler = require('./modeler');
 class Rolein {
 
 	/**
+	 * Create Rolein instance
 	 *
-	 * @param opts
+	 * @param {Object} [opts]
+	 * @param {Object} [opts.models]
+	 * @param {String} [opts.scope]
+	 * @param {String} [opts.modelsDir]
+	 * @param {Object} [opts.defaultModelSettings]
+	 * @param {Object|String} [opts.dataSource]
+	 * @param {Object|String} [opts.datasource]
+	 * @param {Object|String} [opts.ds]
 	 */
 	constructor(opts) {
 		opts = opts || {};
@@ -28,6 +36,14 @@ class Rolein {
 		this.RoleMapping = this.models.RinRoleMapping;
 	}
 
+	get scope() {
+		return this._scope;
+	}
+
+	get isScoped() {
+		return !_.isUndefined(this._scope);
+	}
+
 	/**
 	 *
 	 * @param {String} [scope]
@@ -36,14 +52,6 @@ class Rolein {
 	scoped(scope) {
 		scope = scope || null;
 		return new Rolein({models: this.models, scope});
-	}
-
-	get scope() {
-		return this._scope;
-	}
-
-	get isScoped() {
-		return !_.isUndefined(this._scope);
 	}
 
 	//----------------------------------------------
@@ -136,46 +144,86 @@ class Rolein {
 	// Inherits and Parents
 	//----------------------------------------------
 
+	/**
+	 * Inherit role from parent roles
+	 *
+	 * @param {Role|String} role
+	 * @param {[String]} parents
+	 * @return {Promise.<Role>}
+	 */
 	inherit(role, parents) {
 		joi.assert(role, sv.ArgRole);
 		joi.assert(parents, sv.ArgRoles);
 
-		return PromiseA.resolve(typeof role === 'string' ? this.Role.findById(role) : role)
-			.then(role => role.inherit(parents));
+		const promise = _.isString(role) ? this.Role.findById(role) : PromiseA.resolve(role);
+		return promise.then(role => role.inherit(parents));
 	}
 
+	/**
+	 * Uninherit role's parents
+	 *
+	 * @param {Role|String} role
+	 * @param {[String]} parents
+	 * @return {Promise.<Role>}
+	 */
 	uninherit(role, parents) {
 		joi.assert(role, sv.ArgRole);
 		joi.assert(parents, sv.ArgRoles);
 
-		return PromiseA.resolve(typeof role === 'string' ? this.Role.findById(role) : role)
-			.then(role => role.uninherit(parents));
+		const promise = _.isString(role) ? this.Role.findById(role) : PromiseA.resolve(role);
+		return promise.then(role => role.uninherit(parents));
 	}
 
+	/**
+	 * Set parents to role's inherits
+	 *
+	 * @param {Role|String} role
+	 * @param {[String]} parents
+	 * @return {Promise.<Role>}
+	 */
 	setInherits(role, parents) {
 		joi.assert(role, sv.ArgRole);
 		joi.assert(parents, sv.ArgRoles);
 
-		return PromiseA.resolve(typeof role === 'string' ? this.Role.findById(role) : role)
-			.then(role => role.setInherits(parents));
+		const promise = _.isString(role) ? this.Role.findById(role) : PromiseA.resolve(role);
+		return promise.then(role => role.setInherits(parents));
 	}
 
 	/**
 	 * Resolve roles or role ids to role instances
-	 * @param roles
+	 * @param {Role|String|[Role]|[String]} roles
+	 * @return {Promise.<[Role]>}
 	 */
 	resolve(roles) {
 		return this.Role.resolve(roles, this.scope);
 	}
 
+	/**
+	 * Get first level parent role ids for roles specified
+	 *
+	 * @param {Role|String|[Role]|[String]} roles
+	 * @return {Promise.<[String]>}
+	 */
 	getParentIds(roles) {
 		return this.resolve(roles).map(role => role.parentIds).then(_.flatten).then(_.uniq);
 	}
 
+	/**
+	 * Get first level parent role objects for the roles specified
+	 *
+	 * @param {Role|String|[Role]|[String]} roles
+	 * @return {Promise.<[Role]>}
+	 */
 	getParents(roles) {
 		return this.getParentIds(roles).then(ids => this.resolve(ids));
 	}
 
+	/**
+	 * Recurse get all parent role ids for the roles specified
+	 *
+	 * @param {Role|String|[Role]|[String]} roles
+	 * @return {Promise.<[String]>}
+	 */
 	recurseParentIds(roles) {
 		const recurse = (roles, answer = []) => {
 			return this.getParentIds(roles)
@@ -197,12 +245,20 @@ class Rolein {
 	// Role Mappings
 	//----------------------------------------------
 
+	/**
+	 * Assign roles to users
+	 *
+	 * @param {Role|String|[Role]|[String]} roles
+	 * @param {String|[String]} users
+	 * @return {Promise.<[RoleMapping]>}
+	 */
 	assign(roles, users) {
-		roles = this.resolve(roles);
+		const proles = this.resolve(roles);
 		users = arrify(users).map(u => normalize(u)).filter(_.identity);
 
 		// resolve and filter roles according scope
-		return PromiseA.all([roles, users]).then(([roles, users]) => {
+		// noinspection JSValidateTypes
+		return PromiseA.all([proles, users]).then(([roles, users]) => {
 			if (_.isEmpty(roles) || _.isEmpty(users)) return PromiseA.resolve([]);
 
 			const items = _.flatten(_.map(roles, role => _.map(users, userId => ({
@@ -218,6 +274,13 @@ class Rolein {
 		});
 	}
 
+	/**
+	 * Unassign roles with users
+	 *
+	 * @param {Role|String|[Role]|[String]} roles
+	 * @param {String|[String]} users
+	 * @return {{count: Number}}
+	 */
 	unassign(roles, users) {
 		// resolve and filter roles according scope
 		if (roles !== '*') {
@@ -227,6 +290,7 @@ class Rolein {
 			users = arrify(users).map(u => normalize(u)).filter(_.identity);
 		}
 
+		// noinspection JSValidateTypes
 		return PromiseA.all([roles, users]).then(([roles, users]) => {
 			const where = {scope: this.scope};
 			if (roles !== '*' && !_.isEmpty(users)) {
@@ -240,17 +304,46 @@ class Rolein {
 		});
 	}
 
-	findRolesByUsers(users) {
-		users = arrify(users).map(u => normalize(u)).filter(_.identity);
-		return this.RoleMapping.find({where: {scope: this.scope, userId: {inq: users}}});
+	/**
+	 * Find user roles with user id
+	 *
+	 * @param {String|[String]} user User id
+	 * @param {Boolean} [recursively]
+	 * @return {Promise.<[String]>}
+	 */
+	findUserRoles(user, recursively) {
+		user = arrify(user).map(u => normalize(u)).filter(_.identity);
+		const where = {scope: this.scope, userId: {inq: user}};
+		const promise = PromiseA.fromCallback(cb => this.RoleMapping.find({where}, cb))
+			.map(m => m.roleId).then(_.uniq);
+		if (recursively) {
+			// noinspection JSValidateTypes
+			return promise.then(roleIds => this.recurseParentIds(roleIds).then(parentIds => _.union(roleIds, parentIds)));
+		}
+		// noinspection JSValidateTypes
+		return promise;
 	}
 
-	findUsersByRoles(roles) {
-		return this.resolve(roles).map(role => role.id).then(roles => {
-			return this.RoleMapping.find({where: {scope: this.scope, roleId: {inq: roles}}});
+	/**
+	 * Find role users with role id
+	 *
+	 * @param {Role|String|[Role]|[String]} role
+	 * @return {Promise.<[String]>}
+	 */
+	findRoleUsers(role) {
+		return this.resolve(role).map(role => role.id).then(roles => {
+			const where = {scope: this.scope, roleId: {inq: roles}};
+			return PromiseA.fromCallback(cb => this.RoleMapping.find({where}, cb))
+				.map(m => m.userId).then(_.uniq);
 		});
 	}
 
+	/**
+	 *
+	 * @param {String} user
+	 * @param {Role|String|[Role]|[String]} roles
+	 * @return {Promise.<Boolean>}
+	 */
 	hasRoles(user, roles) {
 		user = normalize(user);
 		return this.resolve(roles).map(role => role.id).then(roles => {

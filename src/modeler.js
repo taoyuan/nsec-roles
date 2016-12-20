@@ -6,17 +6,23 @@ const needs = require('needs');
 const DataSource = require('loopback-datasource-juggler').DataSource;
 
 /**
+ * Load models
  *
- * @param options
- * @return {{}}
+ * @param {Object} [opts]
+ * @param {String} [opts.modelsDir]
+ * @param {Object} [opts.defaultModelSettings]
+ * @param {Object|String} [opts.dataSource]
+ * @param {Object|String} [opts.datasource]
+ * @param {Object|String} [opts.ds]
+ * @return {{RinRole: Object, RinRoleMapping: Object}}
  */
-exports.load = function (options) {
-	options = Object.assign({
+exports.load = function (opts) {
+	opts = Object.assign({
 		modelsDir: path.resolve(__dirname, '../common/models'),
 		defaultModelSettings: {}
-	}, options);
+	}, opts);
 
-	let dataSource = options.dataSource || options.datasource || options.ds;
+	let dataSource = opts.dataSource || opts.datasource || opts.ds;
 	if (dataSource === 'string') {
 		dataSource = {connector: dataSource};
 	}
@@ -27,14 +33,14 @@ exports.load = function (options) {
 		dataSource = new DataSource(dataSource);
 	}
 
-	const definitions = needs(options.modelsDir, {includes: '*.json'});
-	const customizes = needs(options.modelsDir, {includes: '*.js'});
+	const definitions = needs(opts.modelsDir, {includes: '*.json'});
+	const customizes = needs(opts.modelsDir, {includes: '*.js'});
 
 	const models = {};
 
 	_.forEach(definitions, def => {
 		models[def.name] = dataSource.createModel(def.name, def.properties,
-			_.defaults(_.omit(def, ['name', 'properties']), options.defaultModelSettings)
+			_.defaults(_.omit(def, ['name', 'properties']), opts.defaultModelSettings)
 		);
 	});
 
