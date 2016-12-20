@@ -40,7 +40,7 @@ module.exports = function (Role) {
 	};
 
 	/**
-	 ro
+	 * Set parents to role's inherits
 	 *
 	 * @param parents
 	 * @return {Promise.<Role>}
