@@ -1,6 +1,6 @@
 {
   "name": "rolein",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A scoped role library for node.js persisted with loopback juggler",
   "repository": "taoyuan/rolein",
   "author": "Yuan Tao",
