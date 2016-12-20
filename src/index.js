@@ -7,4 +7,4 @@
  * LICENSE.txt file in the root directory of this source tree.
  */
 
-module.exports = require('./nsec-roles');
+module.exports = require('./roles');

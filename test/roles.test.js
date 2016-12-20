@@ -5,7 +5,7 @@ const _ = require('lodash');
 const Promise = require('bluebird');
 const s = require('./support');
 
-describe('nsec-roles', () => {
+describe('roles', () => {
 	const rs = s.createRoles();
 
 	beforeEach(() => s.setup());
@@ -250,22 +250,22 @@ describe('nsec-roles', () => {
 	});
 });
 
-function createInheritedRoles(nsec-roles) {
-	if (!nsec-roles.isScoped) throw new Error('require scoped roles');
+function createInheritedRoles(rs) {
+	if (!rs.isScoped) throw new Error('require scoped roles');
 	return Promise.all([
-		nsec-roles.add('A'),
-		nsec-roles.add('B'),
-		nsec-roles.add('C'),
-		nsec-roles.add('D'),
-		nsec-roles.add('ABC'),
-		nsec-roles.add('BCD'),
-		nsec-roles.add('ABCD')
+		rs.add('A'),
+		rs.add('B'),
+		rs.add('C'),
+		rs.add('D'),
+		rs.add('ABC'),
+		rs.add('BCD'),
+		rs.add('ABCD')
 	]).then(roles => {
 		const [A, B, C, D, ABC, BCD, ABCD] = roles;
 		return Promise.all([
-			nsec-roles.inherit(ABC, [A, B, C]),
-			nsec-roles.inherit(BCD, [B, C, D]),
-			nsec-roles.inherit(ABCD, [ABC, BCD])
+			rs.inherit(ABC, [A, B, C]),
+			rs.inherit(BCD, [B, C, D]),
+			rs.inherit(ABCD, [ABC, BCD])
 		]).thenReturn(roles);
 	});
 }

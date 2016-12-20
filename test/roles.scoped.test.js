@@ -4,7 +4,7 @@ const assert = require('chai').assert;
 const Promise = require('bluebird');
 const s = require('./support');
 
-describe('nsec-roles/scoped', () => {
+describe('roles/scoped', () => {
 	const rs = s.createRoles();
 
 	beforeEach(() => s.setup());
