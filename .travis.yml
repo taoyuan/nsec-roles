@@ -3,6 +3,7 @@ language: node_js
 node_js:
   - '7'
   - '6'
+services: mongodb
 script:
   - npm test
-services: mongodb
+after_success: npm run coverage
