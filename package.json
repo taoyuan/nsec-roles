@@ -33,6 +33,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "chai-as-promised": "^6.0.0",
+    "coveralls": "^2.11.15",
     "eslint": "^3.12.2",
     "eslint-plugin-mocha": "^4.7.0",
     "loopback-connector-mongodb": "^1.17.0",
