@@ -5,7 +5,17 @@
   "repository": "taoyuan/rolein",
   "author": "Yuan Tao",
   "license": "MIT",
-  "keywords": [],
+  "keywords": [
+    "node",
+    "acl",
+    "security",
+    "role",
+    "rbac",
+    "scope",
+    "scoped",
+    "permission",
+    "permissions"
+  ],
   "main": "./src/index.js",
   "engines": {
     "node": ">=6"
