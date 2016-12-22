@@ -24,14 +24,14 @@ describe('roles/scoped', () => {
 		scoped = rs.scoped(123);
 		assert.equal(scoped.scope, '123');
 		scoped = rs.scoped(1, 2, 3);
-		assert.equal(scoped.scope, '1_2_3');
+		assert.equal(scoped.scope, '1:2:3');
 		scoped = rs.scoped('1', '2', '3');
-		assert.equal(scoped.scope, '1_2_3');
+		assert.equal(scoped.scope, '1:2:3');
 		scoped = rs.scoped(new Object({id: 123}));
 		assert.equal(scoped.scope, '123');
 		return s.models.Store.findOne().then(store => {
 			scoped = rs.scoped(store);
-			assert.equal(scoped.scope, 'Store_' + store.id);
+			assert.equal(scoped.scope, 'Store:' + store.id);
 		});
 	});
 

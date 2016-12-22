@@ -7,6 +7,7 @@ const _ = require('lodash');
 
 const sv = require('./sv');
 const modeler = require('./modeler');
+const utils = require('./utils');
 
 class Roles {
 	/**
@@ -56,18 +57,7 @@ class Roles {
 	 */
 	scoped(scope) {
 		if (scope) {
-			scope = _.flatten(_.map(arguments, arg => {
-				if (_.isObject(arg) && arg.id) {
-					if (arg.constructor.modelName) {
-						return [arg.constructor.modelName, arg.id];
-					}
-					return [_.get(arg, 'id')];
-				}
-				if (arg && arg.toString() === '[object Object]') {
-					throw new Error('Unsupported scope: ' + JSON.stringify(arg));
-				}
-				return arg;
-			})).filter(_.identity).join('_');
+			scope = _.flatten(_.map(arguments, arg => utils.identify(arg))).filter(_.identity).join(':');
 		} else {
 			scope = null;
 		}
