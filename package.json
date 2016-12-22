@@ -52,7 +52,7 @@
     "xo": "^0.17.1"
   },
   "scripts": {
-    "lint": "eslint src test tools",
+    "lint": "eslint src test",
     "test": "npm run lint && nyc mocha test/**/*.test.js",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "publish:docs": "easystatic deploy docs --repo taoyuan/nsec-roles",

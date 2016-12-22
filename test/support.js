@@ -3,7 +3,7 @@
 require('chai').use(require('chai-as-promised'));
 const _ = require('lodash');
 const PromiseA = require('bluebird');
-const Rolein = require('../src');
+const Roles = require('../src');
 const pkg = require('../package.json');
 
 const DataSource = require('loopback-datasource-juggler').DataSource;
@@ -24,5 +24,5 @@ exports.teardown = function () {
 };
 
 exports.createRoles = function (opts) {
-	return new Rolein(Object.assign({ds}, opts));
+	return new Roles(ds, opts);
 };

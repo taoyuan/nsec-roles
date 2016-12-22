@@ -8,11 +8,11 @@ const _ = require('lodash');
 const sv = require('./sv');
 const modeler = require('./modeler');
 
-class Rolein {
-
+class Roles {
 	/**
 	 * Create Rolein instance
 	 *
+	 * @param {String|Object} [ds]
 	 * @param {Object} [opts]
 	 * @param {Object} [opts.models]
 	 * @param {String} [opts.scope]
@@ -22,18 +22,23 @@ class Rolein {
 	 * @param {Object|String} [opts.datasource]
 	 * @param {Object|String} [opts.ds]
 	 */
-	constructor(opts) {
-		opts = opts || {};
+	constructor(ds, opts) {
+		if (!_.isString(ds) && !_.isFunction(_.get(ds, 'createModel'))) {
+			opts = ds;
+			ds = undefined;
+		}
+		opts = _.defaults(opts || {}, {ds});
+
 		if (opts.models) {
-			this.models = opts.models;
+			this._models = opts.models;
 		} else {
-			this.models = modeler.load(opts);
+			this._models = modeler.load(opts);
 		}
 
 		this._scope = opts.scope;
 
-		this.Role = this.models.SecRole;
-		this.RoleMapping = this.models.SecRoleMapping;
+		this.Role = this._models.SecRole;
+		this.RoleMapping = this._models.SecRoleMapping;
 	}
 
 	get scope() {
@@ -47,11 +52,11 @@ class Rolein {
 	/**
 	 *
 	 * @param {String} [scope]
-	 * @return {Rolein}
+	 * @return {Roles}
 	 */
 	scoped(scope) {
 		scope = scope || null;
-		return new Rolein({models: this.models, scope});
+		return new Roles({models: this._models, scope});
 	}
 
 	//----------------------------------------------
@@ -359,7 +364,7 @@ class Rolein {
 	}
 }
 
-module.exports = Rolein;
+module.exports = Roles;
 
 function normalize(target, prop) {
 	prop = prop || 'id';
