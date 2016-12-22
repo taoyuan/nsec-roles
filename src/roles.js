@@ -55,13 +55,11 @@ class Roles {
 	 * @return {Roles}
 	 */
 	scoped(scope) {
-		if (!scope) {
-			scope = null;
-		} else {
+		if (scope) {
 			scope = _.flatten(_.map(arguments, arg => {
 				if (_.isObject(arg) && arg.id) {
 					if (arg.constructor.modelName) {
-						return [arg.constructor.modelName, arg.id]
+						return [arg.constructor.modelName, arg.id];
 					}
 					return [_.get(arg, 'id')];
 				}
@@ -70,6 +68,8 @@ class Roles {
 				}
 				return arg;
 			})).filter(_.identity).join('_');
+		} else {
+			scope = null;
 		}
 
 		return new Roles({models: this._models, scope});
