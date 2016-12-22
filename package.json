@@ -1,6 +1,6 @@
 {
   "name": "nsec-roles",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A scoped role library for node.js persisted with loopback juggler",
   "repository": "taoyuan/nsec-roles",
   "author": "Yuan Tao",
