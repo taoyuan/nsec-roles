@@ -18,6 +18,23 @@ describe('roles/scoped', () => {
 		]);
 	}
 
+	it('should scoped with all supported scope type', () => {
+		let scoped = rs.scoped('123');
+		assert.equal(scoped.scope, '123');
+		scoped = rs.scoped(123);
+		assert.equal(scoped.scope, '123');
+		scoped = rs.scoped(1, 2, 3);
+		assert.equal(scoped.scope, '1_2_3');
+		scoped = rs.scoped('1', '2', '3');
+		assert.equal(scoped.scope, '1_2_3');
+		scoped = rs.scoped(new Object({id: 123}));
+		assert.equal(scoped.scope, '123');
+		return s.models.Store.findOne().then(store => {
+			scoped = rs.scoped(store);
+			assert.equal(scoped.scope, 'Store_' + store.id);
+		});
+	});
+
 	it('should find roles', () => {
 		return addRoles().then(([role]) => {
 			return rs.find({where: {scope: null}}).then(roles => {

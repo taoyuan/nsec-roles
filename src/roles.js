@@ -51,11 +51,27 @@ class Roles {
 
 	/**
 	 *
-	 * @param {String} [scope]
+	 * @param {*} [scope]
 	 * @return {Roles}
 	 */
 	scoped(scope) {
-		scope = scope || null;
+		if (!scope) {
+			scope = null;
+		} else {
+			scope = _.flatten(_.map(arguments, arg => {
+				if (_.isObject(arg) && arg.id) {
+					if (arg.constructor.modelName) {
+						return [arg.constructor.modelName, arg.id]
+					}
+					return [_.get(arg, 'id')];
+				}
+				if (arg && arg.toString() === '[object Object]') {
+					throw new Error('Unsupported scope: ' + JSON.stringify(arg));
+				}
+				return arg;
+			})).filter(_.identity).join('_');
+		}
+
 		return new Roles({models: this._models, scope});
 	}
 

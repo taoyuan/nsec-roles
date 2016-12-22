@@ -48,6 +48,7 @@
     "eslint-plugin-mocha": "^4.7.0",
     "loopback-connector-mongodb": "^1.17.0",
     "mocha": "^3.2.0",
+    "needs": "^1.0.3",
     "nyc": "^10.0.0",
     "xo": "^0.17.1"
   },
